@@ -400,27 +400,7 @@ class JRDB3DBox(_BaseDataset):
 
     def _calculate_similarities(self, gt_dets_t, tracker_dets_t):
         if gt_dets_t.shape[1]==7:
-            # FIX: Convert from KITTI format [h, w, l, x, y, z, ry] to [x, y, z, w, h, d, rotation]
-            # as expected by _calculate_box_ious_3d
-            gt_dets_converted = np.column_stack([
-                gt_dets_t[:, 3],  # x
-                gt_dets_t[:, 4],  # y
-                gt_dets_t[:, 5],  # z
-                gt_dets_t[:, 1],  # w
-                gt_dets_t[:, 0],  # h
-                gt_dets_t[:, 2],  # l (depth)
-                gt_dets_t[:, 6]   # rotation
-            ])
-            tracker_dets_converted = np.column_stack([
-                tracker_dets_t[:, 3],  # x
-                tracker_dets_t[:, 4],  # y
-                tracker_dets_t[:, 5],  # z
-                tracker_dets_t[:, 1],  # w
-                tracker_dets_t[:, 0],  # h
-                tracker_dets_t[:, 2],  # l (depth)
-                tracker_dets_t[:, 6]   # rotation
-            ])
-            similarity_scores = self._calculate_box_ious_3d(gt_dets_converted, tracker_dets_converted, box_format='xyzwhd')
+            similarity_scores = self._calculate_box_ious_3d(gt_dets_t, tracker_dets_t, box_format='xyzwhd')
         else:
             similarity_scores = self._calculate_box_ious(gt_dets_t, tracker_dets_t, box_format='xywh')
         return similarity_scores
